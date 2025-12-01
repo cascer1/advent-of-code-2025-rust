@@ -44,13 +44,15 @@ fn do_move(position: i64, steps: i64, is_positive: bool) -> (i64, u64) {
         }
     } else {
         new_position = (position - steps) % 100;
-        if new_position < 0 { new_position += 100; }
+        if new_position < 0 {
+            new_position += 100;
+        }
 
         full_revolutions = if position == 0 {
             steps / 100
         } else if steps < position {
             0
-        } else  {
+        } else {
             1 + (steps - position) / 100
         };
     }
