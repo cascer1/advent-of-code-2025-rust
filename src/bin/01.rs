@@ -33,15 +33,11 @@ pub fn part_two(input: &str) -> Option<u64> {
 
 fn do_move(position: i64, steps: i64, is_positive: bool) -> (i64, u64) {
     let mut new_position;
-    let mut full_revolutions = 0;
+    let full_revolutions;
 
     if is_positive {
-        new_position = position + steps;
-
-        while new_position >= 100 {
-            new_position -= 100;
-            full_revolutions += 1;
-        }
+        new_position = (position + steps) % 100;
+        full_revolutions = (position + steps) / 100;
     } else {
         new_position = (position - steps) % 100;
         if new_position < 0 {
