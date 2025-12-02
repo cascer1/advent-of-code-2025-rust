@@ -3,71 +3,84 @@ use std::collections::HashSet;
 advent_of_code::solution!(2);
 
 pub fn part_one(input: &str) -> Option<u64> {
-    let mut invalid_options: HashSet<u64> = HashSet::new();
+    let mut sum: u64 = 0;
 
     input.split(",").for_each(|range| {
-        let edges = range
-            .split("-")
-            .map(|x| x.trim().parse::<u64>().unwrap())
-            .collect::<Vec<_>>();
-
+        let edges = find_range_edges(range);
         let start = edges.first().unwrap().to_owned();
         let end = edges.last().unwrap().to_owned();
 
         for number in start..=end {
             let number_string = number.to_string();
-            if is_repeating(&number_string, false) {
-                invalid_options.insert(number);
+            if is_repeating(&number_string.as_bytes(), false) {
+                sum += number;
             }
         }
     });
 
-    Some(invalid_options.iter().sum())
+    Some(sum)
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let mut invalid_options: HashSet<u64> = HashSet::new();
+    let mut sum: u64 = 0;
 
     input.split(",").for_each(|range| {
-        let edges = range
-            .split("-")
-            .map(|x| x.trim().parse::<u64>().unwrap())
-            .collect::<Vec<_>>();
-
+        let edges = find_range_edges(range);
         let start = edges.first().unwrap().to_owned();
         let end = edges.last().unwrap().to_owned();
 
         for number in start..=end {
             let number_string = number.to_string();
-            if is_repeating(&number_string, true) {
-                invalid_options.insert(number);
+            if is_repeating(&number_string.as_bytes(), true) {
+                sum += number;
             }
         }
     });
 
-    Some(invalid_options.iter().sum())
+    Some(sum)
 }
 
-fn is_repeating(input: &str, multiple: bool) -> bool {
+fn find_range_edges(range: &str) -> Vec<u64> {
+    let edges = range
+        .split("-")
+        .map(|x| x.trim().parse::<u64>().unwrap())
+        .collect::<Vec<_>>();
+    edges
+}
+
+/// Calculate the KMP failure function
+fn calculate_failure_function(input: &[u8]) -> Vec<usize> {
+    let mut failure_function: Vec<usize> = vec![0; input.len()];
+
+    let mut j: usize = 0;
+    for i in 1..input.len() {
+        while j > 0 && input[i] != input[j] {
+            j = failure_function[j - 1];
+        }
+        if input[i] == input[j] {
+            j += 1;
+        }
+        failure_function[i] = j;
+    }
+
+    failure_function
+}
+
+fn is_repeating(input: &[u8], multiple: bool) -> bool {
     if !multiple {
         let (part1, part2) = input.split_at(input.len() / 2);
         if part1 == part2 {
             return true;
         }
     } else {
-        for part_length in 1..input.len() {
-            if input.chars().count() % part_length == 0 {
-                let subs = input
-                    .as_bytes()
-                    .chunks(part_length)
-                    .map(str::from_utf8)
-                    .collect::<Result<Vec<&str>, _>>()
-                    .unwrap();
+        let failure_function = calculate_failure_function(input);
 
-                if subs.iter().all(|part| *part == subs[0]) {
-                    return true;
-                }
-            }
+        let total_length = input.len();
+        let last_failure = failure_function.last().unwrap();
+        let pattern_length = total_length - last_failure;
+
+        if last_failure > &0 && total_length % pattern_length == 0 {
+            return true
         }
     }
 
