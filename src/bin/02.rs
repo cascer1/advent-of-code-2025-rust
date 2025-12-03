@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 advent_of_code::solution!(2);
 
 pub fn part_one(input: &str) -> Option<u64> {
