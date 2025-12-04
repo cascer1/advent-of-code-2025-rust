@@ -16,11 +16,11 @@ pub enum CardinalDirection {
 }
 
 impl CardinalDirection {
-    pub fn position_at_coords(&self, x: usize, y: usize) -> Option<Pos> {
-        self.position_at(Pos { x, y })
+    pub fn position_from_coords(&self, x: usize, y: usize) -> Option<Pos> {
+        self.position_from(Pos { x, y })
     }
 
-    pub fn position_at(&self, pos: Pos) -> Option<Pos> {
+    pub fn position_from(&self, pos: Pos) -> Option<Pos> {
         match self {
             CardinalDirection::NorthWest => {
                 let x = pos.x.checked_sub(1)?;

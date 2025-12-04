@@ -51,7 +51,7 @@ fn find_largest_number(input: &str, num_digits: usize) -> u64 {
 
     for (index, digit) in found_digits.iter().enumerate() {
         let power: u64 = (num_digits - index - 1) as u64;
-        let this_digit = digit.to_digit(10).unwrap() as u64 * 10_u64.pow(power.try_into().unwrap()) as u64;
+        let this_digit = digit.to_digit(10).unwrap() as u64 * 10_u64.pow(power.try_into().unwrap());
 
         result += this_digit;
     }

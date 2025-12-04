@@ -10,7 +10,7 @@ pub fn part_one(input: &str) -> Option<u64> {
 
         for number in start..=end {
             let number_string = number.to_string();
-            if is_repeating(&number_string.as_bytes(), false) {
+            if is_repeating(number_string.as_bytes(), false) {
                 sum += number;
             }
         }
@@ -29,7 +29,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 
         for number in start..=end {
             let number_string = number.to_string();
-            if is_repeating(&number_string.as_bytes(), true) {
+            if is_repeating(number_string.as_bytes(), true) {
                 sum += number;
             }
         }
@@ -39,11 +39,10 @@ pub fn part_two(input: &str) -> Option<u64> {
 }
 
 fn find_range_edges(range: &str) -> Vec<u64> {
-    let edges = range
+    range
         .split("-")
         .map(|x| x.trim().parse::<u64>().unwrap())
-        .collect::<Vec<_>>();
-    edges
+        .collect::<Vec<_>>()
 }
 
 /// Calculate the KMP failure function
@@ -77,8 +76,8 @@ fn is_repeating(input: &[u8], multiple: bool) -> bool {
         let last_failure = failure_function.last().unwrap();
         let pattern_length = total_length - last_failure;
 
-        if last_failure > &0 && total_length % pattern_length == 0 {
-            return true
+        if last_failure > &0 && total_length.is_multiple_of(pattern_length) {
+            return true;
         }
     }
 

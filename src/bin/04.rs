@@ -1,78 +1,125 @@
 advent_of_code::solution!(4);
 
-use advent_of_code::CardinalDirection;
-use grid::*;
-use strum::IntoEnumIterator;
-
 pub fn part_one(input: &str) -> Option<u64> {
-    let grid = parse_input(input);
+    let (presence, width, height) = parse_input(input);
     let mut accessible_count = 0;
 
-    for (position, _) in grid.indexed_iter().filter(|(_, value)| **value) {
-        let occupied_spots = get_occupied_spots(&grid, position);
-
-        if occupied_spots < 4 {
-            accessible_count += 1;
+    // Calculate neighbor count per position
+    for y in 0..height {
+        for x in 0..width {
+            let coordinates = y * width + x;
+            if presence[coordinates] == 0 {
+                continue;
+            }
+            let mut neighbor_count: u8 = 0;
+            neighbors(x, y, width, height, |nx, ny| {
+                neighbor_count += presence[ny * width + nx];
+            });
+            if neighbor_count < 4 {
+                accessible_count += 1;
+            }
         }
     }
 
     Some(accessible_count)
 }
 
-pub fn part_two(input: &str) -> Option<u64> {
-    let mut grid = parse_input(input);
-    let mut removable_count = 0;
-    let mut removed_in_iteration = 1;
 
-    while removed_in_iteration > 0 {
-        removed_in_iteration = 0;
-        let mut positions_to_remove: Vec<(usize, usize)> = Vec::new();
+fn part_two(input: &str) -> Option<u64> {
+    let (mut presence, width, height) = parse_input(input);
 
-        for (position, _) in grid.indexed_iter().filter(|(_, value)| **value) {
-            let occupied_spots = get_occupied_spots(&grid, position);
-
-            if occupied_spots < 4 {
-                positions_to_remove.push(position);
-                removed_in_iteration += 1;
+    // Calculate neighbor count per position
+    let mut neighbor_counts = vec![0u8; width * height];
+    for y in 0..height {
+        for x in 0..width {
+            let coordinates = y * width + x;
+            if presence[coordinates] == 0 {
+                continue;
             }
-        }
-
-        removable_count += removed_in_iteration;
-
-        for pos in &positions_to_remove {
-            grid[*pos] = false;
+            let mut neighbor_count: u8 = 0;
+            neighbors(x, y, width, height, |nx, ny| {
+                neighbor_count += presence[ny * width + nx];
+            });
+            neighbor_counts[coordinates] = neighbor_count;
         }
     }
 
-    Some(removable_count)
-}
+    let mut removal_queue: Vec<(usize, usize)> = Vec::with_capacity(width * height);
+    let mut head = 0;
+    for y in 0..height {
+        for x in 0..width {
+            let i = y * width + x;
+            if presence[i] == 1 && neighbor_counts[i] < 4 {
+                removal_queue.push((x, y));
+            }
+        }
+    }
 
-fn get_occupied_spots(grid: &Grid<bool>, position: (usize, usize)) -> i32 {
-    let mut occupied_spots = 0;
+    let mut removed_count: u64 = 0;
+    while head < removal_queue.len() {
+        let (x, y) = removal_queue[head];
+        head += 1;
+        let coordinates = y * width + x;
+        if presence[coordinates] == 0 {
+            continue;
+        }
 
-    CardinalDirection::iter()
-        .map(|direction| direction.position_at_coords(position.0, position.1))
-        .filter(|position| position.is_some())
-        .map(|position| position.unwrap())
-        .for_each(|check_position| {
-            let check_value = grid.get(check_position.x, check_position.y);
+        presence[coordinates] = 0; // remove
+        removed_count += 1;
 
-            if let Some(&true) = check_value {
-                occupied_spots += 1;
+        // Update neighbor counts for rolls adjacent to the one we just removed
+        neighbors(x, y, width, height, |nx, ny| {
+            let neighbor_coords = ny * width + nx;
+            if presence[neighbor_coords] == 1 {
+                if neighbor_counts[neighbor_coords] > 0 {
+                    neighbor_counts[neighbor_coords] -= 1;
+                }
+                if neighbor_counts[neighbor_coords] < 4 {
+                    // If the neighbor now has fewer than 4 neighbors, we can remove it as well
+                    removal_queue.push((nx, ny));
+                }
             }
         });
-    occupied_spots
+    }
+
+    Some(removed_count)
 }
 
-fn parse_input(input: &str) -> Grid<bool> {
-    let line_length = input.lines().next().unwrap().len();
-    let input_chars = input
-        .replace('\n', "")
-        .chars()
-        .map(|character| character == '@')
-        .collect::<Vec<_>>();
+const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
+    (-1, -1), (0, -1), (1, -1),
+    (-1, 0),           (1, 0),
+    (-1, 1),  (0, 1),  (1, 1),
+];
 
-    Grid::from_vec(input_chars, line_length)
+#[inline]
+#[allow(clippy::many_single_char_names)]
+fn neighbors(x: usize, y: usize, w: usize, h: usize, mut f: impl FnMut(usize, usize)) {
+    let xi = x as isize;
+    let yi = y as isize;
+    for (dx, dy) in NEIGHBOR_OFFSETS {
+        let nx = xi + dx;
+        let ny = yi + dy;
+        if 0 <= nx && nx < w as isize && 0 <= ny && ny < h as isize {
+            f(nx as usize, ny as usize);
+        }
+    }
+}
+
+fn parse_input(input: &str) -> (Vec<u8>, usize, usize) {
+    let s = input.trim_end_matches(['\n', '\r']); // probably not necessary
+    let mut lines = s.lines();
+    let first = lines.next().unwrap();
+    let width = first.len();
+    let height = 1 + lines.clone().count();
+
+    let mut v = Vec::with_capacity(width * height);// We know the exact size, so we can preallocate
+
+    v.extend(first.bytes().map(|b| (b == b'@') as u8));
+    for line in lines {
+        debug_assert_eq!(line.len(), width);
+        v.extend(line.bytes().map(|b| (b == b'@') as u8));
+    }
+    (v, width, height)
 }
 
 #[cfg(test)]
