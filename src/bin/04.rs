@@ -30,6 +30,7 @@ fn part_two(input: &str) -> Option<u64> {
 
     // Calculate neighbor count per position
     let mut neighbor_counts = vec![0u8; width * height];
+    let mut removal_queue: Vec<(usize, usize)> = Vec::with_capacity(width * height);
     for y in 0..height {
         for x in 0..width {
             let coordinates = y * width + x;
@@ -41,21 +42,15 @@ fn part_two(input: &str) -> Option<u64> {
                 neighbor_count += presence[ny * width + nx];
             });
             neighbor_counts[coordinates] = neighbor_count;
-        }
-    }
-
-    let mut removal_queue: Vec<(usize, usize)> = Vec::with_capacity(width * height);
-    let mut head = 0;
-    for y in 0..height {
-        for x in 0..width {
-            let i = y * width + x;
-            if presence[i] == 1 && neighbor_counts[i] < 4 {
+            if neighbor_count < 4 {
                 removal_queue.push((x, y));
             }
         }
     }
 
+    let mut head = 0;
     let mut removed_count: u64 = 0;
+
     while head < removal_queue.len() {
         let (x, y) = removal_queue[head];
         head += 1;
