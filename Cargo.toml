@@ -30,4 +30,5 @@ tinyjson = "2.5.1"
 # Solution dependencies
 grid = "1.0.0"     # For storing 2D grids
 strum = "0.27"          # For making enums easier to work with
-strum_macros = "0.27"   # For making enums easier to work with
+strum_macros = "0.27"
+pad = "0.1.6"
