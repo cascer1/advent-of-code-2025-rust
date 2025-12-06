@@ -195,7 +195,7 @@ cargo read <day>
 > [!IMPORTANT]
 > This command requires [installing the aoc-cli crate](#configure-aoc-cli-integration).
 
-During december, the `today` shorthand command can be used to:
+During December, the `today` shorthand command can be used to:
 
  - scaffold a solution for the current day
  - download its input
