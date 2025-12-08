@@ -1,52 +1,24 @@
-use itertools::Itertools;
 use std::collections::HashSet;
 
 advent_of_code::solution!(8);
 
 pub fn part_one(input: &str) -> Option<u64> {
-    let sorted_permutations = parse_input(input);
-    let desired_pairs: usize = if input.lines().count() == 20 {
-        10
-    } else {
-        1000
-    };
+    let (sorted_permutations, _) = parse_input(input);
+    let line_count = input.lines().count();
+    let desired_pairs: usize = if line_count == 20 { 10 } else { 1000 };
 
     let mut pair_count = 0;
-    let mut circuits: Vec<HashSet<(u64, u64, u64)>> = Vec::new();
+
+    // keep track of only the junction box index, we don't need the actual coordinates in most cases
+    let mut circuits: Vec<HashSet<usize>> = Vec::with_capacity(3);
 
     while pair_count < desired_pairs {
         let pair = sorted_permutations[pair_count];
-
-        let left_index = is_in_circuit(pair.1, &circuits);
-        let right_index = is_in_circuit(pair.2, &circuits);
-
-        if left_index.is_some() && right_index.is_none() {
-            // add to "one" circuit
-            circuits[left_index.unwrap()].insert(pair.2);
-        } else if left_index.is_none() && right_index.is_some() {
-            // add to "two" circuit
-            circuits[right_index.unwrap()].insert(pair.1);
-        } else if left_index.is_some() && right_index.is_some() {
-            if left_index.unwrap() == right_index.unwrap() {
-                pair_count += 1;
-                continue;
-            }
-            // merge circuits
-            let right = circuits[right_index.unwrap()].clone();
-            circuits[left_index.unwrap()].extend(right);
-            circuits.swap_remove(right_index.unwrap());
-        } else {
-            // new circuit
-            let mut new_set = HashSet::new();
-            new_set.insert(pair.1);
-            new_set.insert(pair.2);
-            circuits.push(new_set);
-        }
-
         pair_count += 1;
+        add_to_circuit(&mut circuits, pair);
     }
 
-    circuits.sort_unstable_by(|a, b| a.len().cmp(&b.len()).reverse());
+    circuits.sort_unstable_by_key(|s| std::cmp::Reverse(s.len()));
 
     let result = circuits
         .iter()
@@ -57,87 +29,86 @@ pub fn part_one(input: &str) -> Option<u64> {
     Some(result)
 }
 
-fn parse_input(input: &str) -> Vec<(u64, (u64, u64, u64), (u64, u64, u64))> {
-    let mut junction_boxes: Vec<(u64, u64, u64)> = Vec::new();
-
-    for line in input.lines() {
-        let parts = line
-            .split(',')
-            .map(|s| s.parse().unwrap())
-            .collect::<Vec<u64>>();
-        junction_boxes.push((parts[0], parts[1], parts[2]))
-    }
-
-    junction_boxes.sort_unstable();
-
-    let permutations = junction_boxes.iter().combinations(2);
-
-    let mut sorted_permutations: Vec<(u64, (u64, u64, u64), (u64, u64, u64))> =
-        Vec::with_capacity(junction_boxes.len() * junction_boxes.len());
-
-    for permutation in permutations {
-        let left = permutation[0];
-        let right = permutation[1];
-
-        let distance = (((left.0 as i64 - right.0 as i64).pow(2))
-            + ((left.1 as i64 - right.1 as i64).pow(2))
-            + ((left.2 as i64 - right.2 as i64).pow(2)))
-        .isqrt();
-
-        sorted_permutations.push((distance as u64, *left, *right));
-    }
-
-    sorted_permutations.sort_unstable_by(|a, b| a.0.cmp(&b.0));
-    sorted_permutations
-}
-
-fn is_in_circuit(
-    junction_box: (u64, u64, u64),
-    circuits: &Vec<HashSet<(u64, u64, u64)>>,
-) -> Option<usize> {
-    circuits
-        .iter()
-        .position(|v| v.iter().any(|p| p == &junction_box))
-}
-
 pub fn part_two(input: &str) -> Option<u64> {
-    let sorted_permutations = parse_input(input);
+    let (sorted_permutations, junction_boxes) = parse_input(input);
     let line_count = input.lines().count();
 
     let mut pair_count = 0;
-    let mut circuits: Vec<HashSet<(u64, u64, u64)>> = Vec::new();
-    let mut pair: (u64, (u64, u64, u64), (u64, u64, u64)) = (0, (0, 0, 0), (0, 0, 0));
+    let mut circuits: Vec<HashSet<usize>> = Vec::with_capacity(3);
 
     while circuits.is_empty() || circuits[0].len() != line_count {
-        pair = sorted_permutations[pair_count];
+        let pair = sorted_permutations[pair_count];
         pair_count += 1;
+        add_to_circuit(&mut circuits, pair);
 
-        let left_index_option = is_in_circuit(pair.1, &circuits);
-        let right_index_option = is_in_circuit(pair.2, &circuits);
+        if circuits[0].len() == line_count {
+            let left = junction_boxes[pair.1];
+            let right = junction_boxes[pair.2];
 
-        if let Some(left_index) = left_index_option {
-            if let Some(right_index) = right_index_option {
-                if left_index == right_index {
-                    continue;
-                }
-                let right = circuits[right_index].clone();
-                circuits[left_index].extend(right);
-                circuits.swap_remove(right_index);
-            } else {
-                circuits[left_index].insert(pair.2);
-            }
-        } else if let Some(right_index) = right_index_option {
-            circuits[right_index].insert(pair.1);
-        } else {
-            // new circuit
-            let mut new_set = HashSet::new();
-            new_set.insert(pair.1);
-            new_set.insert(pair.2);
-            circuits.push(new_set);
+            return Some((left.0 * right.0) as u64)
         }
     }
 
-    Some(pair.1.0 * pair.2.0)
+    None
+}
+
+fn add_to_circuit(circuits: &mut Vec<HashSet<usize>>, pair: (u64, usize, usize)) {
+    let left_index_option = is_in_circuit(pair.1, &circuits);
+    let right_index_option = is_in_circuit(pair.2, &circuits);
+
+    if let Some(left_index) = left_index_option {
+        if let Some(right_index) = right_index_option {
+            if left_index != right_index {
+                let right = std::mem::take(&mut circuits[right_index]);
+                circuits[left_index].extend(right);
+                circuits.swap_remove(right_index);
+            }
+        } else {
+            circuits[left_index].insert(pair.2);
+        }
+    } else if let Some(right_index) = right_index_option {
+        circuits[right_index].insert(pair.1);
+    } else {
+        // new circuit
+        let mut new_set = HashSet::new();
+        new_set.insert(pair.1);
+        new_set.insert(pair.2);
+        circuits.push(new_set);
+    }
+}
+
+fn parse_input(input: &str) -> (Vec<(u64, usize, usize)>, Vec<(i64, i64, i64)>) {
+    let mut junction_boxes: Vec<(i64, i64, i64)> = Vec::new();
+
+    for line in input.lines() {
+        let mut it = line.split(',');
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        let y: i64 = it.next().unwrap().parse().unwrap();
+        let z: i64 = it.next().unwrap().parse().unwrap();
+        junction_boxes.push((x, y, z));
+    }
+
+    let mut sorted_permutations: Vec<(u64, usize, usize)> = Vec::new();
+
+    for i in 0..junction_boxes.len() {
+        for j in (i + 1)..junction_boxes.len() {
+            let left = junction_boxes[i];
+            let right = junction_boxes[j];
+
+            let distance = ((left.0 - right.0).pow(2))
+                + ((left.1 - right.1).pow(2))
+                + ((left.2 - right.2).pow(2));
+
+            sorted_permutations.push((distance as u64, i, j));
+        }
+    }
+
+    sorted_permutations.sort_unstable_by_key(|x| x.0);
+    (sorted_permutations, junction_boxes)
+}
+
+fn is_in_circuit(box_index: usize, circuits: &[HashSet<usize>]) -> Option<usize> {
+    circuits.iter().position(|v| v.contains(&box_index))
 }
 
 #[cfg(test)]
