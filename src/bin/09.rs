@@ -51,6 +51,15 @@ pub fn part_two(input: &str) -> Option<u64> {
             let upper_point = corners.get(i).unwrap();
             let lower_point = corners.get(j).unwrap();
 
+            let x_range = (lower_point.0 - upper_point.0).abs() + 1;
+            let y_range = (upper_point.1 - lower_point.1).abs() + 1;
+            let area = x_range * y_range;
+
+            if area < largest_area {
+                // No need to perform the expensive validity check if it's not larger than already found.
+                continue;
+            }
+
             if rectangle_is_invalid(
                 normalize_rectangle((
                     (lower_point.0, lower_point.1),
@@ -62,9 +71,7 @@ pub fn part_two(input: &str) -> Option<u64> {
                 // No need to calculate this rectangle because it is not entirely inside the edge
                 continue;
             }
-            let x_range = (lower_point.0 - upper_point.0).abs() + 1;
-            let y_range = (upper_point.1 - lower_point.1).abs() + 1;
-            let area = x_range * y_range;
+
             largest_area = largest_area.max(area);
         }
     }
