@@ -6,37 +6,38 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 
 ## 2025 Results
 
-|                      Day                       | Part 1 | Part 2 |
-|:----------------------------------------------:|:------:|:------:|
-|  [Day 1](https://adventofcode.com/2025/day/1)  |   ⭐    |   ⭐    |
-|  [Day 2](https://adventofcode.com/2025/day/2)  |   ⭐    |   ⭐    |
-|  [Day 3](https://adventofcode.com/2025/day/3)  |   ⭐    |   ⭐    |
-|  [Day 4](https://adventofcode.com/2025/day/4)  |   ⭐    |   ⭐    |
-|  [Day 5](https://adventofcode.com/2025/day/5)  |   ⭐    |   ⭐    |
-|  [Day 6](https://adventofcode.com/2025/day/6)  |   ⭐    |   ⭐    |
-|  [Day 7](https://adventofcode.com/2025/day/7)  |   ⭐    |   ⭐    |
-|  [Day 8](https://adventofcode.com/2025/day/8)  |   ⭐    |   ⭐    |
-|  [Day 9](https://adventofcode.com/2025/day/9)  |   ⭐    |   ⭐    |
-| [Day 12](https://adventofcode.com/2025/day/10) |   ⭐    |        |
+|                      Day                       | Part 1 |  Part 2   |
+|:----------------------------------------------:|:------:|:---------:|
+|  [Day 1](https://adventofcode.com/2025/day/1)  |   ⭐    |     ⭐     |
+|  [Day 2](https://adventofcode.com/2025/day/2)  |   ⭐    |     ⭐     |
+|  [Day 3](https://adventofcode.com/2025/day/3)  |   ⭐    |     ⭐     |
+|  [Day 4](https://adventofcode.com/2025/day/4)  |   ⭐    |     ⭐     |
+|  [Day 5](https://adventofcode.com/2025/day/5)  |   ⭐    |     ⭐     |
+|  [Day 6](https://adventofcode.com/2025/day/6)  |   ⭐    |     ⭐     |
+|  [Day 7](https://adventofcode.com/2025/day/7)  |   ⭐    |     ⭐     |
+|  [Day 8](https://adventofcode.com/2025/day/8)  |   ⭐    |     ⭐     |
+|  [Day 9](https://adventofcode.com/2025/day/9)  |   ⭐    |     ⭐     |
+| [Day 10](https://adventofcode.com/2025/day/10) |   ⭐    | 💀[^fn12] |
+
+[^fn12]: I was unable to solve this by myself, so I used the Z3 library to do the hard math for me.
 
 <!--- benchmarking table --->
-
 ## Benchmarks
 
-|            Day            |  Part 1   |  Part 2   |
-|:-------------------------:|:---------:|:---------:|
-| [Day 1](./src/bin/01.rs)  | `40.6µs`  | `49.2µs`  |
-| [Day 2](./src/bin/02.rs)  | `24.3ms`  | `38.4ms`  |
-| [Day 3](./src/bin/03.rs)  | `433.8µs` | `853.4µs` |
-| [Day 4](./src/bin/04.rs)  | `48.3µs`  | `368.8µs` |
-| [Day 5](./src/bin/05.rs)  | `40.0µs`  | `19.3µs`  |
-| [Day 6](./src/bin/06.rs)  | `55.9µs`  | `133.2µs` |
-| [Day 7](./src/bin/07.rs)  | `119.1µs` | `124.3µs` |
-| [Day 8](./src/bin/08.rs)  | `11.4ms`  | `11.2ms`  |
-| [Day 9](./src/bin/09.rs)  | `61.9µs`  |  `23.4s`  |
-| [Day 10](./src/bin/10.rs) |    `-`    |    `-`    |
+| Day | Part 1 | Part 2 |
+| :---: | :---: | :---:  |
+| [Day 1](./src/bin/01.rs) | `39.7µs` | `45.9µs` |
+| [Day 2](./src/bin/02.rs) | `23.5ms` | `35.2ms` |
+| [Day 3](./src/bin/03.rs) | `420.9µs` | `814.4µs` |
+| [Day 4](./src/bin/04.rs) | `48.0µs` | `370.1µs` |
+| [Day 5](./src/bin/05.rs) | `40.3µs` | `18.8µs` |
+| [Day 6](./src/bin/06.rs) | `54.3µs` | `129.6µs` |
+| [Day 7](./src/bin/07.rs) | `119.3µs` | `121.4µs` |
+| [Day 8](./src/bin/08.rs) | `10.0ms` | `10.7ms` |
+| [Day 9](./src/bin/09.rs) | `61.2µs` | `23.6s` |
+| [Day 10](./src/bin/10.rs) | `62.6µs` | `149.5ms` |
 
-**Total: 23487.65ms**
+**Total: 23831.25ms**
 <!--- benchmarking table --->
 
 ---

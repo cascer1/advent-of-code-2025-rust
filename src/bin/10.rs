@@ -1,4 +1,5 @@
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
+use z3::{ast::Int, Optimize, SatResult};
 
 advent_of_code::solution!(10);
 
@@ -28,10 +29,10 @@ fn solve_line_p1(line: &str) -> u64 {
         });
 
     let mut buttons: Vec<u16> = Vec::with_capacity(4);
-    let mut previous_part = parts.next().unwrap();
-    while previous_part.starts_with('(') {
+    let mut token = parts.next().unwrap();
+    while token.starts_with('(') {
         buttons.push(
-            previous_part
+            token
                 .trim_matches(['(', ')'])
                 .split(',')
                 .map(|l| l.parse::<u16>().unwrap())
@@ -40,7 +41,7 @@ fn solve_line_p1(line: &str) -> u64 {
                     acc
                 }),
         );
-        previous_part = parts.next().unwrap();
+        token = parts.next().unwrap();
     }
 
     let size = 1usize << light_count;
@@ -77,66 +78,81 @@ fn solve_line_p1(line: &str) -> u64 {
 }
 
 fn solve_line_p2(line: &str) -> u64 {
-    let mut parts = line.split_whitespace().into_iter().skip(1);
+   let mut parts = line.split_whitespace().skip(1);
 
-    let mut buttons: Vec<Vec<usize>> = Vec::new();
-    let mut previous_part = parts.next().unwrap();
-    while previous_part.starts_with('(') {
-        buttons.push(
-            previous_part
-                .trim_matches(['(', ')'])
-                .split(",")
-                .map(|l| l.parse::<usize>().unwrap())
-                .collect(),
-        );
-        previous_part = parts.next().unwrap();
-    }
+   let mut buttons: Vec<Vec<usize>> = Vec::new();
+   let mut token = parts.next().unwrap_or("");
+   while token.starts_with('(') {
+       let indices: Vec<usize> = token
+           .trim_matches(['(', ')'])
+           .split(',')
+           .filter(|s| !s.is_empty())
+           .map(|s| s.parse::<usize>().unwrap())
+           .collect();
+       buttons.push(indices);
+       token = parts.next().unwrap_or("");
+   }
 
-    let desired_state: Vec<u16> = previous_part
-        .trim_matches(['{', '}'])
-        .split(",")
-        .map(|l| l.parse::<u16>().unwrap())
-        .collect();
+   let targets: Vec<i64> = token
+       .trim_matches(['{', '}'])
+       .split(',')
+       .filter(|s| !s.is_empty())
+       .map(|s| s.parse::<i64>().unwrap())
+       .collect();
 
-    let initial_state = vec![0; desired_state.len()];
+   let opt = Optimize::new();
 
-    let mut queue: VecDeque<(Vec<u16>, u64)> = VecDeque::new();
-    let mut visited = HashSet::new();
+   // Decision variables light_index >= 0, integer
+   let light_indices: Vec<Int> = (0..buttons.len())
+       .map(|i| Int::new_const(format!("light_{i}")))
+       .collect();
+   let zero = Int::from_i64(0);
+   for light_index in &light_indices {
+       opt.assert(&light_index.ge(&zero));
+   }
 
-    queue.push_back((initial_state, 0));
+   // Constraints per light/counter
+   for light_index in 0..targets.len() {
+       let mut terms: Vec<&Int> = Vec::new();
+       for (button_index, button) in buttons.iter().enumerate() {
+           if button.iter().any(|&i| i == light_index) {
+               terms.push(&light_indices[button_index]);
+           }
+       }
+       let left = if terms.is_empty() {
+           zero.clone()
+       } else {
+           Int::add(&terms)
+       };
+       let rhs = Int::from_i64(targets[light_index]);
+       opt.assert(&left.eq(&rhs));
+   }
 
-    while let Some((state, presses)) = queue.pop_front() {
-        'button: for i in 0..buttons.len() {
-            let next = press_button(&state, &buttons[i]);
+   // Objective: minimize total presses
+   let sum_all = if light_indices.is_empty() {
+       zero.clone()
+   } else {
+       let refs: Vec<&Int> = light_indices.iter().collect();
+       Int::add(&refs)
+   };
+   opt.minimize(&sum_all);
 
-            if visited.insert(next.clone()) {
-                // this is a new state
-                if next == desired_state {
-                    return presses + 1;
-                }
-
-                for (index, value) in next.iter().enumerate() {
-                    if value > &desired_state[index] {
-                        continue 'button;
-                    }
-                }
-
-                queue.push_back((next, presses + 1));
-            }
-        }
-    }
-
-    0
-}
-
-fn press_button(state: &Vec<u16>, button: &Vec<usize>) -> Vec<u16> {
-    let mut new_state = state.clone();
-
-    for &index in button.iter() {
-        new_state[*&index] += 1;
-    }
-
-    new_state
+   match opt.check(&[]) {
+       SatResult::Sat | SatResult::Unknown => {
+           // Extract model and compute total presses
+           let model = opt.get_model().expect("model expected");
+           let mut total: u64 = 0;
+           for x in &light_indices {
+               let v = model
+                   .eval(x, true)
+                   .and_then(|n| n.as_u64())
+                   .expect("integer value");
+               total += v;
+           }
+           total
+       }
+       SatResult::Unsat => panic!("No solution for line: {}", line),
+   }
 }
 
 #[cfg(test)]
