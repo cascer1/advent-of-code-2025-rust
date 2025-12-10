@@ -7,21 +7,10 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let mut result = 0;
-
-    for line in input.lines() {
-        let line_result = solve_line_p2(line);
-        println!("Solved {} in {} presses", line, line_result);
-        result += line_result;
-    }
-
-    Some(result)
+    Some(input.lines().map(|l| solve_line_p2(l)).sum())
 }
 
 fn solve_line_p1(line: &str) -> u64 {
-    // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-    // [.##.] = desired state -> [0, 1, 1, 0]
-    // (3) toggles light index 3, (1,3) toggles light indices 1 and 3, etc
     let mut parts = line.split_whitespace().into_iter();
 
     let desired_pattern = parts.next().unwrap();
@@ -54,8 +43,6 @@ fn solve_line_p1(line: &str) -> u64 {
         previous_part = parts.next().unwrap();
     }
 
-    // jolts requirements {} can be ignored for now
-
     let size = 1usize << light_count;
     let mut visited = vec![0u8; size];
     let mut queue = VecDeque::with_capacity(265);
@@ -77,7 +64,7 @@ fn solve_line_p1(line: &str) -> u64 {
                 if visited[index] == 0 {
                     // we haven't seen this state before
                     if next == desired_state {
-                        return presses + 1;
+                        return presses;
                     }
                     visited[index] = 1;
                     queue.push_back(next);

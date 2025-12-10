@@ -6,33 +6,35 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 
 ## 2025 Results
 
-| Day | Part 1 | Part 2 |
-| :---: | :---: |:------:|
-| [Day 1](https://adventofcode.com/2025/day/1) | ⭐ |   ⭐    |
-| [Day 2](https://adventofcode.com/2025/day/2) | ⭐ |   ⭐    |
-| [Day 3](https://adventofcode.com/2025/day/3) | ⭐ |   ⭐    |
-| [Day 4](https://adventofcode.com/2025/day/4) | ⭐ |   ⭐    |
-| [Day 5](https://adventofcode.com/2025/day/5) | ⭐ |   ⭐    |
-| [Day 6](https://adventofcode.com/2025/day/6) | ⭐ |   ⭐    |
-| [Day 7](https://adventofcode.com/2025/day/7) | ⭐ |   ⭐    |
-| [Day 8](https://adventofcode.com/2025/day/8) | ⭐ |   ⭐    |
-| [Day 9](https://adventofcode.com/2025/day/9) | ⭐ | ⭐ |
+|                      Day                       | Part 1 | Part 2 |
+|:----------------------------------------------:|:------:|:------:|
+|  [Day 1](https://adventofcode.com/2025/day/1)  |   ⭐    |   ⭐    |
+|  [Day 2](https://adventofcode.com/2025/day/2)  |   ⭐    |   ⭐    |
+|  [Day 3](https://adventofcode.com/2025/day/3)  |   ⭐    |   ⭐    |
+|  [Day 4](https://adventofcode.com/2025/day/4)  |   ⭐    |   ⭐    |
+|  [Day 5](https://adventofcode.com/2025/day/5)  |   ⭐    |   ⭐    |
+|  [Day 6](https://adventofcode.com/2025/day/6)  |   ⭐    |   ⭐    |
+|  [Day 7](https://adventofcode.com/2025/day/7)  |   ⭐    |   ⭐    |
+|  [Day 8](https://adventofcode.com/2025/day/8)  |   ⭐    |   ⭐    |
+|  [Day 9](https://adventofcode.com/2025/day/9)  |   ⭐    |   ⭐    |
+| [Day 12](https://adventofcode.com/2025/day/10) |   ⭐    |        |
 
 <!--- benchmarking table --->
+
 ## Benchmarks
 
-| Day | Part 1 | Part 2 |
-| :---: | :---: | :---:  |
-| [Day 1](./src/bin/01.rs) | `40.6µs` | `49.2µs` |
-| [Day 2](./src/bin/02.rs) | `24.3ms` | `38.4ms` |
-| [Day 3](./src/bin/03.rs) | `433.8µs` | `853.4µs` |
-| [Day 4](./src/bin/04.rs) | `48.3µs` | `368.8µs` |
-| [Day 5](./src/bin/05.rs) | `40.0µs` | `19.3µs` |
-| [Day 6](./src/bin/06.rs) | `55.9µs` | `133.2µs` |
-| [Day 7](./src/bin/07.rs) | `119.1µs` | `124.3µs` |
-| [Day 8](./src/bin/08.rs) | `11.4ms` | `11.2ms` |
-| [Day 9](./src/bin/09.rs) | `61.9µs` | `23.4s` |
-| [Day 10](./src/bin/10.rs) | `-` | `-` |
+|            Day            |  Part 1   |  Part 2   |
+|:-------------------------:|:---------:|:---------:|
+| [Day 1](./src/bin/01.rs)  | `40.6µs`  | `49.2µs`  |
+| [Day 2](./src/bin/02.rs)  | `24.3ms`  | `38.4ms`  |
+| [Day 3](./src/bin/03.rs)  | `433.8µs` | `853.4µs` |
+| [Day 4](./src/bin/04.rs)  | `48.3µs`  | `368.8µs` |
+| [Day 5](./src/bin/05.rs)  | `40.0µs`  | `19.3µs`  |
+| [Day 6](./src/bin/06.rs)  | `55.9µs`  | `133.2µs` |
+| [Day 7](./src/bin/07.rs)  | `119.1µs` | `124.3µs` |
+| [Day 8](./src/bin/08.rs)  | `11.4ms`  | `11.2ms`  |
+| [Day 9](./src/bin/09.rs)  | `61.9µs`  |  `23.4s`  |
+| [Day 10](./src/bin/10.rs) |    `-`    |    `-`    |
 
 **Total: 23487.65ms**
 <!--- benchmarking table --->
@@ -55,19 +57,26 @@ cargo scaffold <day>
 # 🎄 Type `cargo solve 01` to run your solution.
 ```
 
-Individual solutions live in the `./src/bin/` directory as separate binaries. _Inputs_ and _examples_ live in the the `./data` directory.
+Individual solutions live in the `./src/bin/` directory as separate binaries. _Inputs_ and _examples_ live in the the
+`./data` directory.
 
-Every [solution](https://github.com/fspoettel/advent-of-code-rust/blob/main/src/template.txt) has _tests_ referencing its _example_ file in `./data/examples`. Use these tests to develop and debug your solutions against the example input. In VS Code, `rust-analyzer` will display buttons for running / debugging these unit tests above the unit test blocks.
+Every [solution](https://github.com/fspoettel/advent-of-code-rust/blob/main/src/template.txt) has _tests_ referencing
+its _example_ file in `./data/examples`. Use these tests to develop and debug your solutions against the example input.
+In VS Code, `rust-analyzer` will display buttons for running / debugging these unit tests above the unit test blocks.
 
 > [!TIP]
-> If a day has multiple example inputs, you can use the `read_file_part()` helper in your tests instead of `read_file()`. If this e.g. applies to day 1, you can create a second example file `01-2.txt` and invoke the helper like `let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 2));`. This supports an arbitrary number of example files.
+> If a day has multiple example inputs, you can use the `read_file_part()` helper in your tests instead of
+`read_file()`. If this e.g. applies to day 1, you can create a second example file `01-2.txt` and invoke the helper like
+`let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 2));`. This supports an arbitrary
+> number of example files.
 
 ### ➡️ Download input for a day
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > This requires [installing the aoc-cli crate](#configure-aoc-cli-integration).
 
-You can automatically download puzzle input and description by either appending the `--download` flag to `scaffold` (e.g. `cargo scaffold 4 --download`) or with the separate `download` command:
+You can automatically download puzzle input and description by either appending the `--download` flag to `scaffold` (
+e.g. `cargo scaffold 4 --download`) or with the separate `download` command:
 
 ```sh
 # example: `cargo download 1`
@@ -95,7 +104,8 @@ cargo solve <day>
 # Part 2: 42 (41.0ns)
 ```
 
-The `solve` command runs your solution against real puzzle inputs. To run an optimized build of your code, append the `--release` flag as with any other rust program.
+The `solve` command runs your solution against real puzzle inputs. To run an optimized build of your code, append the
+`--release` flag as with any other rust program.
 
 #### Submitting solutions
 
@@ -120,7 +130,8 @@ cargo all
 # Total: 0.20ms
 ```
 
-This runs all solutions sequentially and prints output to the command-line. Same as for the `solve` command, the `--release` flag runs an optimized build.
+This runs all solutions sequentially and prints output to the command-line. Same as for the `solve` command, the
+`--release` flag runs an optimized build.
 
 ### ➡️ Benchmark your solutions
 
@@ -139,17 +150,22 @@ cargo time <day> [--all] [--store]
 # Stored updated benchmarks.
 ```
 
-The `cargo time` command allows you to benchmark your code and store timings in the readme. When benching, the runner will run your code between `10` and `10.000` times, depending on execution time of first execution, and print the average execution time.
+The `cargo time` command allows you to benchmark your code and store timings in the readme. When benching, the runner
+will run your code between `10` and `10.000` times, depending on execution time of first execution, and print the
+average execution time.
 
 `cargo time` has three modes of execution:
 
- 1. `cargo time` without arguments incrementally benches solutions that do not have been stored in the readme yet and skips the rest.
- 2. `cargo time <day>` benches a single solution.
- 3. `cargo time --all` benches all solutions.
+1. `cargo time` without arguments incrementally benches solutions that do not have been stored in the readme yet and
+   skips the rest.
+2. `cargo time <day>` benches a single solution.
+3. `cargo time --all` benches all solutions.
 
-By default, `cargo time` does not write to the readme. In order to do so, append the `--store` flag: `cargo time --store`.
+By default, `cargo time` does not write to the readme. In order to do so, append the `--store` flag:
+`cargo time --store`.
 
-> Please note that these are not _scientific_ benchmarks, understand them as a fun approximation. 😉 Timings, especially in the microseconds range, might change a bit between invocations.
+> Please note that these are not _scientific_ benchmarks, understand them as a fun approximation. 😉 Timings, especially
+> in the microseconds range, might change a bit between invocations.
 
 ### ➡️ Run all tests
 
@@ -157,7 +173,8 @@ By default, `cargo time` does not write to the readme. In order to do so, append
 cargo test
 ```
 
-To run tests for a specific day, append `--bin <day>`, e.g. `cargo test --bin 01`. You can further scope it down to a specific part, e.g. `cargo test --bin 01 part_one`.
+To run tests for a specific day, append `--bin <day>`, e.g. `cargo test --bin 01`. You can further scope it down to a
+specific part, e.g. `cargo test --bin 01 part_one`.
 
 ### ➡️ Read puzzle description
 
@@ -181,9 +198,9 @@ cargo read <day>
 
 During December, the `today` shorthand command can be used to:
 
- - scaffold a solution for the current day
- - download its input
- - and read the puzzle
+- scaffold a solution for the current day
+- download its input
+- and read the puzzle
 
 in one go.
 
@@ -226,13 +243,18 @@ cargo clippy
 ### Configure aoc-cli integration
 
 1. Install [`aoc-cli`](https://github.com/scarvalhojr/aoc-cli/) via cargo: `cargo install aoc-cli --version 0.12.0`
-2. Create the file `<home_directory>/.adventofcode.session` and paste your session cookie into it. To retrieve the session cookie, press F12 anywhere on the Advent of Code website to open your browser developer tools. Look in _Cookies_ under the _Application_ or _Storage_ tab, and copy out the `session` cookie value. [^1]
+2. Create the file `<home_directory>/.adventofcode.session` and paste your session cookie into it. To retrieve the
+   session cookie, press F12 anywhere on the Advent of Code website to open your browser developer tools. Look in
+   _Cookies_ under the _Application_ or _Storage_ tab, and copy out the `session` cookie value. [^1]
 
-Once installed, you can use the [download command](#download-input--description-for-a-day), the read command, and automatically submit solutions via the [`--submit` flag](#submitting-solutions).
+Once installed, you can use the [download command](#download-input--description-for-a-day), the read command, and
+automatically submit solutions via the [`--submit` flag](#submitting-solutions).
 
 ### Use DHAT to profile heap allocations
 
-If you are not only interested in the runtime of your solution, but also its memory allocation profile, you can use the template's [DHAT](https://valgrind.org/docs/manual/dh-manual.html) integration to analyze it. In order to activate DHAT, call the `solve` command with the `--dhat` flag.
+If you are not only interested in the runtime of your solution, but also its memory allocation profile, you can use the
+template's [DHAT](https://valgrind.org/docs/manual/dh-manual.html) integration to analyze it. In order to activate DHAT,
+call the `solve` command with the `--dhat` flag.
 
 ```sh
 cargo solve 1 --dhat
@@ -246,35 +268,42 @@ cargo solve 1 --dhat
 # Part 1: 9001 (4.1ms)
 ```
 
-The command will output some basic stats to the command-line and generate a `dhat-heap.json` report in the repo root directory.
+The command will output some basic stats to the command-line and generate a `dhat-heap.json` report in the repo root
+directory.
 
-You can pass the report a tool like [dh-view](https://nnethercote.github.io/dh_view/dh_view.html) to view a detailed breakdown of heap allocations.
+You can pass the report a tool like [dh-view](https://nnethercote.github.io/dh_view/dh_view.html) to view a detailed
+breakdown of heap allocations.
 
 ### Use VS Code to debug your code
 
-1.  Install [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) and [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb).
-2.  Set breakpoints in your code. [^3]
-3.  Click _Debug_ next to the unit test or the _main_ function. [^4]
-4.  The debugger will halt your program at the specific line and allow you to inspect the local stack. [^5]
+1. Install [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+   and [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb).
+2. Set breakpoints in your code. [^3]
+3. Click _Debug_ next to the unit test or the _main_ function. [^4]
+4. The debugger will halt your program at the specific line and allow you to inspect the local stack. [^5]
 
 ## Useful crates
 
--   [itertools](https://crates.io/crates/itertools): Extends iterators with extra methods and adaptors. Frequently useful for aoc puzzles.
--   [regex](https://crates.io/crates/regex): Official regular expressions implementation for Rust.
+- [itertools](https://crates.io/crates/itertools): Extends iterators with extra methods and adaptors. Frequently useful
+  for aoc puzzles.
+- [regex](https://crates.io/crates/regex): Official regular expressions implementation for Rust.
 
 A curated list of popular crates can be found on [blessed.rs](https://blessed.rs/crates).
 
-Do you have aoc-specific crate recommendations? [Share them!](https://github.com/fspoettel/advent-of-code-rust/edit/main/README.md)
+Do you have aoc-specific crate
+recommendations? [Share them!](https://github.com/fspoettel/advent-of-code-rust/edit/main/README.md)
 
 ## Footnotes
 
-[^1]: The session cookie might expire after a while (~1 month) which causes the downloads to fail. To fix this issue, refresh the `.adventofcode.session` file.
-[^2]: The session cookie might expire after a while (~1 month) which causes the automated workflow to fail. To fix this issue, refresh the AOC_SESSION secret.
+[^1]: The session cookie might expire after a while (~1 month) which causes the downloads to fail. To fix this issue,
+refresh the `.adventofcode.session` file.
+[^2]: The session cookie might expire after a while (~1 month) which causes the automated workflow to fail. To fix this
+issue, refresh the AOC_SESSION secret.
 [^3]:
-    <img src="https://user-images.githubusercontent.com/1682504/198838369-453dc22c-c645-4803-afe0-fc50d5a3f00c.png" alt="Set a breakpoint" width="450" />
+<img src="https://user-images.githubusercontent.com/1682504/198838369-453dc22c-c645-4803-afe0-fc50d5a3f00c.png" alt="Set a breakpoint" width="450" />
 
 [^4]:
-    <img alt="Run debugger" src="https://user-images.githubusercontent.com/1682504/198838372-c89369f6-0d05-462e-a4c7-8cd97b0912e6.png" width="450" />
+<img alt="Run debugger" src="https://user-images.githubusercontent.com/1682504/198838372-c89369f6-0d05-462e-a4c7-8cd97b0912e6.png" width="450" />
 
 [^5]:
-    <img alt="Inspect debugger state" src="https://user-images.githubusercontent.com/1682504/198838373-36df6996-23bf-4757-9335-0bc4c1db0276.png" width="450" />
+<img alt="Inspect debugger state" src="https://user-images.githubusercontent.com/1682504/198838373-36df6996-23bf-4757-9335-0bc4c1db0276.png" width="450" />
