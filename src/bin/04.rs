@@ -103,7 +103,7 @@ fn neighbors(x: usize, y: usize, w: usize, h: usize, mut f: impl FnMut(usize, us
 fn parse_input(input: &str) -> (Vec<u8>, usize, usize) {
     let s = input.trim_end_matches(['\n', '\r']); // probably not necessary
     let mut lines = s.lines();
-    let first = lines.next().unwrap();
+    let first = lines.next().expect("first line cannot be missing");
     let width = first.len();
     let height = 1 + lines.clone().count();
 

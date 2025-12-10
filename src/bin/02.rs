@@ -5,8 +5,8 @@ pub fn part_one(input: &str) -> Option<u64> {
 
     input.split(",").for_each(|range| {
         let edges = find_range_edges(range);
-        let start = edges.first().unwrap().to_owned();
-        let end = edges.last().unwrap().to_owned();
+        let start = edges.first().expect("The vector should have at least one entry").to_owned();
+        let end = edges.last().expect("The vector should have at least one entry").to_owned();
 
         for number in start..=end {
             let number_string = number.to_string();
@@ -24,8 +24,8 @@ pub fn part_two(input: &str) -> Option<u64> {
 
     input.split(",").for_each(|range| {
         let edges = find_range_edges(range);
-        let start = edges.first().unwrap().to_owned();
-        let end = edges.last().unwrap().to_owned();
+        let start = edges.first().expect("The vector should have at least one entry").to_owned();
+        let end = edges.last().expect("The vector should have at least one entry").to_owned();
 
         for number in start..=end {
             let number_string = number.to_string();
@@ -41,7 +41,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 fn find_range_edges(range: &str) -> Vec<u64> {
     range
         .split("-")
-        .map(|x| x.trim().parse::<u64>().unwrap())
+        .map(|x| x.trim().parse::<u64>().expect("Invalid number"))
         .collect::<Vec<_>>()
 }
 

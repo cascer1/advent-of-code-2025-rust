@@ -14,7 +14,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 fn solve_line_p1(line: &str) -> u64 {
     let mut parts = line.split_whitespace().into_iter();
 
-    let desired_pattern = parts.next().unwrap();
+    let desired_pattern = parts.next().expect("missing pattern");
     let light_count = desired_pattern.len() - 2;
 
     let desired_state = desired_pattern
@@ -29,19 +29,19 @@ fn solve_line_p1(line: &str) -> u64 {
         });
 
     let mut buttons: Vec<u16> = Vec::with_capacity(4);
-    let mut token = parts.next().unwrap();
+    let mut token = parts.next().expect("missing token");
     while token.starts_with('(') {
         buttons.push(
             token
                 .trim_matches(['(', ')'])
                 .split(',')
-                .map(|l| l.parse::<u16>().unwrap())
+                .map(|l| l.parse::<u16>().expect("invalid number"))
                 .fold(0u16, |mut acc, ch| {
                     acc |= 1u16 << ch;
                     acc
                 }),
         );
-        token = parts.next().unwrap();
+        token = parts.next().expect("missing token");
     }
 
     let size = 1usize << light_count;
@@ -57,7 +57,7 @@ fn solve_line_p1(line: &str) -> u64 {
         presses += 1;
 
         for _ in 0..queue.len() {
-            let state = queue.pop_front().unwrap();
+            let state = queue.pop_front().expect("queue cannot be empty");
             for &b in buttons.iter() {
                 let next = state ^ b;
                 let index = next as usize;
