@@ -31,7 +31,7 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let (graph, inverse_graph, id_list) = parse_input(input);
+    let (mut graph, inverse_graph, id_list) = parse_input(input);
 
     let mut can_find_map: HashMap<usize, HashSet<usize>> = HashMap::new();
 
@@ -62,26 +62,66 @@ pub fn part_two(input: &str) -> Option<u64> {
         ),
     );
 
+    graph = prune_invalid_nodes(graph, can_find_map.get(&out_id).unwrap());
+
+    if can_find_map.get(&fft_id).unwrap().contains(&dac_id) {
+        panic!("Forward Fourier Transforms don't work on analog signals!")
+    }
+
+    // Logically, an FFT needs to be before a DAC, because FFT's work on digital signals
+    // So let's split the problem into three separate steps
+    // SVR --> FFT --> DAC --> OUT
+
     let mut visited = vec![false; id_list.len()];
 
-    Some(get_number_paths_with_mandatory_visits(
+    let step1 = get_number_paths_with_mandatory_visits(
         svr_id,
-        out_id,
+        fft_id,
         &graph,
-        &[dac_id, fft_id],
+        &[],
         &mut visited,
         &can_find_map,
-    ))
+    );
+
+    let step2 = get_number_paths_with_mandatory_visits(
+        fft_id,
+        dac_id,
+        &graph,
+        &[],
+        &mut visited,
+        &can_find_map,
+    );
+
+    let step3 = get_number_paths_with_mandatory_visits(
+        dac_id,
+        out_id,
+        &graph,
+        &[],
+        &mut visited,
+        &can_find_map,
+    );
+
+    Some(step1 * step2 * step3)
 }
 
-// I don't know why these lifetime annotations <'a> are necessary
 fn prune_invalid_nodes(graph: HashMap<usize, Vec<usize>>, can_visit_out_map: &HashSet<usize>) -> HashMap<usize, Vec<usize>> {
     let mut result = HashMap::new();
 
     for entry in graph.iter() {
         let (from, to) = entry;
-        if can_visit_out_map.contains(from) {
-            result.insert(*from, to.to_vec());
+        let mut new_to: Vec<usize> = Vec::new();
+        if !can_visit_out_map.contains(from) {
+            continue;
+        }
+
+        for dest in to {
+            if can_visit_out_map.contains(dest) {
+                new_to.push(*dest);
+            }
+        }
+
+        if !new_to.is_empty() {
+            result.insert(*from, new_to);
         }
     }
 
@@ -141,8 +181,8 @@ fn parse_input(input: &str) -> (HashMap<usize, Vec<usize>>, HashMap<usize, Vec<u
     (graph, inverse_graph, id_list)
 }
 
-// TODO: It's time to add memoization
-fn get_number_paths_with_mandatory_visits<'a>(
+// TODO: optimization improvement: add memoization
+fn get_number_paths_with_mandatory_visits(
     source: usize,
     destination: usize,
     destinations: &HashMap<usize, Vec<usize>>,
@@ -196,6 +236,7 @@ fn get_number_paths_with_mandatory_visits<'a>(
         }
     }
 
+    // intermediate_results[source] = Some(result);
     visited[source] = false;
     result
 }
