@@ -31,5 +31,5 @@ tinyjson = "2.5.1"
 strum = "0.27"          # For making enums easier to work with
 strum_macros = "0.27"
 pad = "0.1.6"
-z3 = "0.19.5"
-
+#z3 = { version = "0.19.6", features = ["gh-release"] }
+z3 = "0.19.6"
