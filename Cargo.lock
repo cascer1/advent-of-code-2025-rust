@@ -25,6 +25,7 @@ dependencies = [
  "dhat",
  "pad",
  "pico-args",
+ "regex",
  "strum",
  "strum_macros",
  "tinyjson",
