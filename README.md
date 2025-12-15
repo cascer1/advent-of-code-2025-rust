@@ -19,6 +19,7 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 |  [Day 9](https://adventofcode.com/2025/day/9)  |   ⭐    |     ⭐     |
 | [Day 10](https://adventofcode.com/2025/day/10) |   ⭐    | 💀[^fn12] |
 | [Day 11](https://adventofcode.com/2025/day/11) |   ⭐    |     ⭐     |
+| [Day 12](https://adventofcode.com/2025/day/12) |   ⭐    |     ⭐     |
 
 [^fn12]: I was unable to solve this by myself, so I used the Z3 library to do the hard math for me.
 
