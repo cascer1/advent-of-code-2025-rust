@@ -1,0 +1,11 @@
+when:
+  event: push
+  branch: [main, renovate/*]
+
+steps:
+  check:
+    image: rust:latest
+    commands:
+      - rustup component add clippy
+      - cargo clippy --all-targets --all-features -- -D warnings
+      - cargo test
